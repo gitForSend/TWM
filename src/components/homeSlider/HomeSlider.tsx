@@ -6,34 +6,69 @@ import Container from "../basic/container/Container";
 import ArrowLeftHome from "../../../public/assets/svg/ArrowLeft";
 import ArrowRightHome from "../../../public/assets/svg/ArrowRight";
 import EgyptLandscape from "../../../public/assets/png/egyptLandscape.png";
-import SecondImage from "../../../public/assets/png/bg.png"
+import SecondImage from "../../../public/assets/png/bg.png";
 import Discover from "../discover/Discover";
+
 export default function HomeSlider() {
-  const slides: {id: string, content: string,background: string}[] = [
-    { id: "slide_1", content: "It’s Time To Explore The World", background: EgyptLandscape.src },
-    { id: "slide_2", content: "It’s Time To Explore The World", background: SecondImage.src },
-    { id: "slide_3", content: "It’s Time To Explore The World", background: EgyptLandscape.src},
-    { id: "slide_4", content: "It’s Time To Explore The World", background: EgyptLandscape.src },
-    { id: "slide_5", content: "It’s Time To Explore The World", background: EgyptLandscape.src },
-    { id: "slide_6", content: "It’s Time To Explore The World", background: EgyptLandscape.src },
-    { id: "slide_7", content: "It’s Time To Explore The World", background: EgyptLandscape.src },
+  const slides: { id: string; content: string; background: string }[] = [
+    {
+      id: "slide_1",
+      content: "It’s Time To Explore The World",
+      background: EgyptLandscape.src,
+    },
+    {
+      id: "slide_2",
+      content: "It’s Time To Explore The World",
+      background: SecondImage.src,
+    },
+    {
+      id: "slide_3",
+      content: "It’s Time To Explore The World",
+      background: EgyptLandscape.src,
+    },
+    {
+      id: "slide_4",
+      content: "It’s Time To Explore The World",
+      background: EgyptLandscape.src,
+    },
+    {
+      id: "slide_5",
+      content: "It’s Time To Explore The World",
+      background: EgyptLandscape.src,
+    },
+    {
+      id: "slide_6",
+      content: "It’s Time To Explore The World",
+      background: EgyptLandscape.src,
+    },
+    {
+      id: "slide_7",
+      content: "It’s Time To Explore The World",
+      background: EgyptLandscape.src,
+    },
   ];
 
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [isFading, setIsFading] = useState(false);
+  const [isTransitioning, setIsTransitioning] = useState(false);
 
   const handleSlideChange = (direction: "next" | "prev") => {
-    setIsFading(true);
+    if (isTransitioning) return; 
+
+    setIsTransitioning(true); 
+
+    setCurrentIndex((prevIndex) => {
+      let newIndex = prevIndex;
+      if (direction === "next") {
+        newIndex = (prevIndex + 1) % slides.length;
+      } else {
+        newIndex = (prevIndex - 1 + slides.length) % slides.length;
+      }
+      return newIndex;
+    });
+
     setTimeout(() => {
-      setCurrentIndex((prevIndex) => {
-        if (direction === "next") {
-          return (prevIndex + 1) % slides.length;
-        } else {
-          return (prevIndex - 1 + slides.length) % slides.length;
-        }
-      });
-      setIsFading(false);
-    }, 500);
+      setIsTransitioning(false);
+    }, 1000);
   };
 
   const nextSlide = () => handleSlideChange("next");
@@ -45,11 +80,10 @@ export default function HomeSlider() {
     <div
       className={styles.slider}
       style={{
-        backgroundImage: `url(${currentSlide.background})`, // Set background image
+        backgroundImage: `url(${currentSlide.background})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
-        opacity: isFading ? 0.8 : 1,
-        transition: "opacity .3s ease, background-image 0.5s ease",
+        transition: "background-image 1s ease", // Smooth background transition
       }}
     >
       <div className={styles.slides}>
@@ -57,7 +91,11 @@ export default function HomeSlider() {
           <div
             key={slide.id}
             className={styles.slide}
-            style={{ display: index === currentIndex ? "block" : "none" }}
+            style={{
+              opacity: index === currentIndex ? 1 : 0,
+              zIndex: index === currentIndex ? 1 : 0,
+              transition: "opacity 1s ease", // Smooth opacity transition
+            }}
           >
             <p>{slide.content}</p>
           </div>
@@ -66,10 +104,22 @@ export default function HomeSlider() {
       <Container>
         <div className={styles.slideDiv}>
           <div className={styles.arrows}>
-            <div className={styles.prev} onClick={prevSlide}>
+            <div
+              className={styles.prev}
+              onClick={prevSlide}
+              style={{
+                pointerEvents: isTransitioning ? "none" : "auto", // Disable arrow during transition
+              }}
+            >
               <ArrowLeftHome className={styles.arrow} />
             </div>
-            <div className={styles.next} onClick={nextSlide}>
+            <div
+              className={styles.next}
+              onClick={nextSlide}
+              style={{
+                pointerEvents: isTransitioning ? "none" : "auto", // Disable arrow during transition
+              }}
+            >
               <ArrowRightHome className={styles.arrow} />
             </div>
           </div>
@@ -77,7 +127,7 @@ export default function HomeSlider() {
           <h2>{(currentIndex + 1).toString().padStart(2, "0")}</h2>
         </div>
         <div className={styles.discover}>
-          <Discover/>
+          <Discover />
         </div>
       </Container>
     </div>

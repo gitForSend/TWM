@@ -89,7 +89,7 @@
   color: #fff;
   width: 982px;
   margin: 0 auto;
-  transform: translateY(-35%);
+  transform: translateY(-200%);
 }
 .slideDiv h2 {
   font-family: var(--font-family);
