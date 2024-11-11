@@ -18,7 +18,7 @@ export default function HomeSlider() {
     },
     {
       id: "slide_2",
-      content: "It’s Time To Explore The World",
+      content: "It’s Time To Explore The Worlddd",
       background: SecondImage.src,
     },
     {
@@ -86,21 +86,22 @@ export default function HomeSlider() {
         transition: "background-image 1s ease", // Smooth background transition
       }}
     >
-      <div className={styles.slides}>
-        {slides.map((slide: any, index: number) => (
-          <div
-            key={slide.id}
-            className={styles.slide}
-            style={{
-              opacity: index === currentIndex ? 1 : 0,
-              zIndex: index === currentIndex ? 1 : 0,
-              transition: "opacity 1s ease", // Smooth opacity transition
-            }}
-          >
-            <p>{slide.content}</p>
-          </div>
-        ))}
-      </div>
+<div className={styles.slides}>
+  {slides.map((slide, index) => (
+    <div
+      key={slide.id}
+      className={styles.slide}
+      style={{
+        display: index === currentIndex ? "block" : "none", // Показываем только активный слайд
+        zIndex: index === currentIndex ? 1 : 0,
+        transition: "opacity 1s ease",
+      }}
+    >
+      <p>{slide.content}</p>
+    </div>
+  ))}
+</div>
+
       <Container>
         <div className={styles.slideDiv}>
           <div className={styles.arrows}>
